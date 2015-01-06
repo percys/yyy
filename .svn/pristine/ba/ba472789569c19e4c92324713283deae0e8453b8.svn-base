@@ -1,0 +1,23 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<table class="easyui-datagrid" data-options="title:'字典管理',border:false,fit:true,singleSelect:true,rownumbers:true,pagination:true,nowrap:false
+">
+	<thead>
+        <tr>
+        	<th data-options="field:'typename',width:100,align:'center'">类型名称</th>
+        	<th data-options="field:'itemcode',width:100,align:'center'">项目编码</th>
+			<th data-options="field:'itemdesc',width:100,align:'center'">项目表述</th>
+        </tr>
+	</thead>
+	<tbody>
+        <tr>
+        	<td>user_type</td>
+        	<td>1</td>
+        	<td>前台</td>
+        </tr>
+        <tr>
+        	<td>user_type</td>
+        	<td>2</td>
+        	<td>后台</td>
+        </tr>
+	</tbody>
+</table>

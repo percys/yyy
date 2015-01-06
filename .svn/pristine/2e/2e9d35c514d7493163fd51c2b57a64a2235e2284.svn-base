@@ -1,0 +1,125 @@
+package dv.sys.entity;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * WebRole entity. @author MyEclipse Persistence Tools
+ */
+public class WebRole implements java.io.Serializable {
+
+	private static final long serialVersionUID = -590481872728069591L;
+
+	// Fields
+	private String roleid;
+	private String name;
+	private String orderno;
+	private String rolelevel;
+	private String posdetail;
+	private String rtype;
+	private Set<WebUser> webUsers = new HashSet<WebUser>(0);
+	private Set<WebResource> webResources = new HashSet<WebResource>(0);
+
+	// Constructors
+
+	/** default constructor */
+	public WebRole() {
+	}
+
+	/** minimal constructor */
+	public WebRole(String roleid) {
+		this.roleid = roleid;
+	}
+
+	// Property accessors
+
+	public String getRoleid() {
+		return this.roleid;
+	}
+
+	public void setRoleid(String roleid) {
+		this.roleid = roleid;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this){
+			return true;
+		}
+		if(obj == null){
+			return false;
+		}
+		
+		if(!(obj instanceof WebRole)){
+			return false;
+		}
+		
+		WebRole temp = (WebRole)obj;
+		if(temp.getRoleid().equals(this.getRoleid())){
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return this.getRoleid().hashCode();
+	}
+	
+
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getOrderno() {
+		return this.orderno;
+	}
+
+	public void setOrderno(String orderno) {
+		this.orderno = orderno;
+	}
+
+	public String getRolelevel() {
+		return this.rolelevel;
+	}
+
+	public void setRolelevel(String rolelevel) {
+		this.rolelevel = rolelevel;
+	}
+
+	public String getPosdetail() {
+		return this.posdetail;
+	}
+
+	public void setPosdetail(String posdetail) {
+		this.posdetail = posdetail;
+	}
+
+	public String getRtype() {
+		return this.rtype;
+	}
+
+	public void setRtype(String rtype) {
+		this.rtype = rtype;
+	}
+
+	public Set<WebUser> getWebUsers() {
+		return webUsers;
+	}
+
+	public void setWebUsers(Set<WebUser> webUsers) {
+		this.webUsers = webUsers;
+	}
+
+	public Set<WebResource> getWebResources() {
+		return webResources;
+	}
+
+	public void setWebResources(Set<WebResource> webResources) {
+		this.webResources = webResources;
+	}
+}

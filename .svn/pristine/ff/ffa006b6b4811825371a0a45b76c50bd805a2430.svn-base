@@ -1,0 +1,83 @@
+package dv.sys.dao;
+
+import java.util.List;
+
+import dv.sys.entity.Torgmanage;
+import dv.sys.entity.Tusruser;
+import dv.sys.entity.WebResource;
+import dv.sys.entity.WebRole;
+import dv.sys.entity.WebUser;
+import dv.sys.queryProperties.QueryWebUser;
+
+public interface WebUserDao extends BaseDao {
+	/**
+	 * 根据username获得用户
+	 * @param userid 用户id
+	 */
+	public WebUser getWebUser(String username);
+	/**
+	 * 查找删除用户id，获得用户
+	 * @param userid 用户id
+	 */
+	public WebUser getWebUserid(String id);
+	/**
+	 * 保存或更新用户信息
+	 * @param webUser 用户信息
+	 * @return 用户对象
+	 */
+	public WebUser saveWebUser(WebUser webUser);
+	
+	/**
+	 * 批量删除用户
+	 * @param webUser 要删除的用户编号字符串
+	 */
+	public void delUser(WebUser webUser);
+	/**
+	 * 获得用户可以访问的资源信息
+	 * @param webUser
+	 * @return
+	 */
+	public List<WebResource> getUserResource(WebUser webUser,String id,boolean bool);
+	/**
+	 * 获得用户拥有的角色信息
+	 * @param webUser
+	 * @return
+	 */
+	public List<WebRole> getUserRole(WebUser webUser);
+	/**
+	 * @param page当前页
+	 * @param rows每页显示大小
+	 * @param sort排序字段
+	 * @param order排序方式
+	 * @return 用户列表
+	 */
+	public List<WebUser> doSplitPage(final int page,final int rows,final String sort,final String order,final QueryWebUser queryWebUser);
+
+	/**
+	 * 获得用户的总数量
+	 * @param queryWebUser	用户对象
+	 * @return	用户数量
+	 */
+	public Long getUserTotal(final QueryWebUser queryWebUser);
+	/**
+	 * 获得门店编码，名称
+	 * @return 门店编码，名称
+	 */
+	public List<Torgmanage> getOrgCode(WebUser webUser);
+	/**
+	 * 根据tor查找选择的门店
+	 * @param tor
+	 * @return 选择的门店
+	 */
+	public Torgmanage getCode(Torgmanage tor);
+	/**
+	 * 验证增加员工的工号是否存在于Tusruser表
+	 * @param user 增加员工对象
+	 * @return Tusruser对象
+	 */
+	public List<Tusruser> getCheckGh(WebUser user);
+	/**
+	 * 验证user表是否已有此员工id
+	 */
+	public WebUser getUserAgentId(WebUser user);
+}

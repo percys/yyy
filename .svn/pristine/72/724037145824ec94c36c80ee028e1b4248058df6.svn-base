@@ -1,0 +1,99 @@
+package dv.sys.dao.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import dv.sys.dao.WebRoleDao;
+import dv.sys.entity.WebResource;
+import dv.sys.entity.WebRole;
+import dv.sys.entity.WebUser;
+import dv.sys.queryProperties.QueryWebRole;
+
+@SuppressWarnings("unchecked")
+public class WebRoleDaoImpl extends BaseDaoImpl implements WebRoleDao {
+
+	public void addRole(WebRole role) {
+		this.getHibernateTemplate().save(role);
+	}
+	
+	public void delRole(String ids) {
+		String[] delIds=ids.split(",");//分割字符串,批量删除
+		for (String id : delIds) {
+			this.getHibernateTemplate().delete(getRole(id));
+		}
+	}
+
+	public WebRole getRole(String roleid) {
+		return getHibernateTemplate().get(WebRole.class, roleid);
+	}
+
+	public void updateRole(WebRole role) {
+		this.getHibernateTemplate().update(role);
+	}
+	/**
+	 * 获得角色的总数量
+	 * @param queryWebRole	角色对象
+	 * @return	角色数量
+	 */
+	public Long getRoleTotal(QueryWebRole queryWebRole) {
+		StringBuilder hql=new StringBuilder("select count(*) from WebRole where 1=1");
+		Map<String, Object> map=new HashMap<String,Object>();
+		hql=jointHQL(hql, queryWebRole, map, null, null);
+		return super.getTotal(hql.toString(), map);
+	}
+	/**
+	 * @param page当前页
+	 * @param rows每页显示大小
+	 * @param sort排序字段
+	 * @param order排序方式
+	 * @return 角色列表
+	 */
+	public List<WebRole> doSplitPage(int page, int rows, String sort,
+			String order, QueryWebRole queryWebRole) {
+		StringBuilder hql=new StringBuilder("from WebRole where 1=1");
+		Map<String, Object> map=new HashMap<String,Object>();
+		hql=jointHQL(hql, queryWebRole,map, sort, order);
+		return (List<WebRole>) super.doSplitPage(hql.toString(), page, rows, map);
+	}
+	
+	/**
+	 * 拼接hql
+	 * @param hql 要拼接的hql
+	 * @param queryWebUnit 要注入的查询属性
+	 * @param map 存放属性的集合
+	 * @param sort 排序字段
+	 * @param order 排序方式
+	 * @return 拼接好的hql
+	 */
+	private StringBuilder jointHQL(StringBuilder hql,QueryWebRole queryWebRole,Map<String, Object> map,String sort,String order) {
+		if (queryWebRole!=null) {
+			if (queryWebRole.getName()!=null&&!queryWebRole.getName().trim().equals("")) {
+				hql.append(" and unitid like :unitid");
+				map.put("unitid", "%"+queryWebRole.getName()+"%");
+			}
+		}
+		if (sort!=null&&!sort.trim().equals("")&&order!=null&&!order.trim().equals("")) {
+			hql.append(" order by :sort :order");
+			map.put("sort", sort);
+			map.put("order", order);
+		}
+		return hql;
+	}
+
+	public WebResource getByName(String name) {
+		return (WebResource) this.getHibernateTemplate().find("from WebResource where name=?", name).get(0);
+	}
+
+	public List<WebResource> getResourceById(String id) {
+		String hql = "from WebResource re inner join fetch re.webRoles ro where ro.roleid=?";
+		return getHibernateTemplate().find(hql, id);
+	}
+
+	public List<WebRole> getAllRole(WebUser webUser) {
+		if (webUser==null) {
+			return getHibernateTemplate().find("from WebRole");
+		}
+		return getHibernateTemplate().find("from WebRole r inner join fetch r.webUsers u where u.userid=?",webUser.getUserid());
+	}
+}

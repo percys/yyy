@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd 
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true"/>
+			<tx:method name="find*" read-only="true"/>
+			<tx:method name="search*" read-only="true"/>
+			<tx:method name="query*" read-only="true"/>
+			<tx:method name="add*" propagation="REQUIRED"/>
+			<tx:method name="save*" propagation="REQUIRED"/>
+			<tx:method name="edit*" propagation="REQUIRED"/>
+			<tx:method name="del*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="do*" propagation="REQUIRED"/>
+			<tx:method name="del*" propagation="REQUIRED"/>
+			<tx:method name="*" read-only="true" propagation="REQUIRED"/>
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut expression="execution(* dv.biz.impl.*.*(..))" id="serviceMethod"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethod"/>
+	</aop:config>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="configLocation"
+			value="classpath:hibernate.cfg.xml">
+		</property>
+	</bean>
+	<!-- 通知中心配置 -->
+	<bean name="eamilDao" class="dv.sys.dao.impl.MailBoxDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean name="eamilBiz" class="dv.biz.impl.MailBoxBizImpl">
+		<property name="md" ref="eamilDao"/>
+	</bean>
+	<bean name="eamil_getAll" class="dv.sys.action.MailBoxAction" scope="prototype">
+		<property name="mailBox" ref="eamilBiz"/>
+	</bean>
+	<bean name="eamil_getAlls" class="dv.sys.action.MailBoxAction" scope="prototype">
+		<property name="mailBox" ref="eamilBiz"/>
+	</bean>
+	<bean name="eamil_updateState" class="dv.sys.action.MailBoxAction" scope="prototype">
+		<property name="mailBox" ref="eamilBiz"/>
+	</bean>
+	<bean name="eamil_count" class="dv.sys.action.MailBoxAction" scope="prototype">
+		<property name="mailBox" ref="eamilBiz"/>
+	</bean>
+	<bean name="eamil_updateAll" class="dv.sys.action.MailBoxAction" scope="prototype">
+		<property name="mailBox" ref="eamilBiz"/>
+	</bean>
+	<bean name="eamil_save" class="dv.sys.action.MailBoxAction" scope="prototype">
+		<property name="mailBox" ref="eamilBiz"/>
+	</bean>
+	
+	<!-- 资源配置 -->
+	<bean name="webResourceDao" class="dv.sys.dao.impl.WebResourceDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean name="webResourceBiz" class="dv.biz.impl.WebResourceBizImpl">
+		<property name="webResourceDao" ref="webResourceDao"/>
+	</bean>
+	<bean name="resource_list" class="dv.sys.action.WebResourceAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+	</bean>
+	<!-- 部门配置 -->
+	<bean name="webUnitDao" class="dv.sys.dao.impl.WebUnitDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean name="webUnitBiz" class="dv.biz.impl.WebUnitBizImpl">
+		<property name="webUnitDao" ref="webUnitDao"/>
+	</bean>
+	<bean name="unit_list" class="dv.sys.action.WebUnitAction" scope="prototype">
+		<property name="webUnitBiz" ref="webUnitBiz"/>
+	</bean>
+	<bean name="unit_delete" class="dv.sys.action.WebUnitAction" scope="prototype">
+		<property name="webUnitBiz" ref="webUnitBiz"/>
+	</bean>
+	<bean name="unit_unitTree" class="dv.sys.action.WebUnitAction" scope="prototype">
+		<property name="webUnitBiz" ref="webUnitBiz"/>
+	</bean>
+	<bean name="unit_add" class="dv.sys.action.WebUnitAction" scope="prototype">
+		<property name="webUnitBiz" ref="webUnitBiz"/>
+	</bean>
+	<bean name="unit_update" class="dv.sys.action.WebUnitAction" scope="prototype">
+		<property name="webUnitBiz" ref="webUnitBiz"/>
+	</bean>
+	<!-- 角色配置 -->
+	<bean name="webRoleDao" class="dv.sys.dao.impl.WebRoleDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean name="webRoleBiz" class="dv.biz.impl.WebRoleBizImpl">
+		<property name="webRoleDao" ref="webRoleDao"/>
+	</bean>
+	<bean name="role_list" class="dv.sys.action.WebRoleAction" scope="prototype">
+		<property name="webRoleBiz" ref="webRoleBiz"/>
+		<property name="webResourceBiz" ref="webResourceBiz"/>
+	</bean>
+	<bean name="role_delete" class="dv.sys.action.WebRoleAction" scope="prototype">
+		<property name="webRoleBiz" ref="webRoleBiz"></property>
+		<property name="webResourceBiz" ref="webResourceBiz"/>
+	</bean>
+	<bean name="role_add" class="dv.sys.action.WebRoleAction" scope="prototype">
+		<property name="webRoleBiz" ref="webRoleBiz"></property>
+		<property name="webResourceBiz" ref="webResourceBiz"/>
+	</bean>
+	<bean name="role_resouce" class="dv.sys.action.WebRoleAction" scope="prototype">
+		<property name="webRoleBiz" ref="webRoleBiz"></property>
+		<property name="webResourceBiz" ref="webResourceBiz"/>
+	</bean>
+	<bean name="role_updateOld" class="dv.sys.action.WebRoleAction" scope="prototype">
+		<property name="webRoleBiz" ref="webRoleBiz"></property>
+		<property name="webResourceBiz" ref="webResourceBiz"/>
+	</bean>
+	<bean name="role_ResouceById" class="dv.sys.action.WebRoleAction" scope="prototype">
+		<property name="webRoleBiz" ref="webRoleBiz"></property>
+		<property name="webResourceBiz" ref="webResourceBiz"/>
+	</bean>
+	<bean name="role_getAllRole" class="dv.sys.action.WebRoleAction" scope="prototype">
+		<property name="webRoleBiz" ref="webRoleBiz"></property>
+	</bean>
+	<bean name="role_getUserRoles" class="dv.sys.action.WebRoleAction" scope="prototype">
+		<property name="webRoleBiz" ref="webRoleBiz"></property>
+	</bean>
+	<!-- 用户配置 -->
+	<bean name="webUserDao" class="dv.sys.dao.impl.WebUserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean name="webUserBiz" class="dv.biz.impl.WebUserBizImpl">
+		<property name="webUserDao" ref="webUserDao"/>
+	</bean>
+	<bean name="user_login" class="dv.sys.action.WebUserAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+	</bean>
+	<bean name="user_editPwd" class="dv.sys.action.WebUserAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+	</bean>
+	<bean name="user_exit" class="dv.sys.action.WebUserAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+	</bean>
+	<bean name="user_info" class="dv.sys.action.WebUserAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+	</bean>
+	<bean name="user_list" class="dv.sys.action.WebUserAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+	</bean>
+	<bean name="user_add" class="dv.sys.action.WebUserAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+		<property name="webRoleBiz" ref="webRoleBiz"/>
+	</bean>
+	<bean name="user_save" class="dv.sys.action.WebUserAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+		<property name="webRoleBiz" ref="webRoleBiz"/>
+	</bean>
+	<bean name="user_delete" class="dv.sys.action.WebUserAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+		<property name="webRoleBiz" ref="webRoleBiz"/>
+	</bean>
+	<bean name="user_getOrgCode" class="dv.sys.action.WebUserAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+		<property name="webRoleBiz" ref="webRoleBiz"/>
+	</bean>
+	<bean name="user_getUserOrgCode" class="dv.sys.action.WebUserAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+		<property name="webRoleBiz" ref="webRoleBiz"/>
+	</bean>
+	<bean name="user_valid" class="dv.sys.action.WebUserAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+		<property name="webRoleBiz" ref="webRoleBiz"/>
+	</bean>
+	<!-- 验证码-->
+	<bean name="rand_getlist" class="dv.sys.action.WebUserAction" scope="prototype">
+		<property name="webUserBiz" ref="webUserBiz"/>
+		<property name="webRoleBiz" ref="webRoleBiz"/>
+	</bean>
+	<!--管理员内部门店注入  -->
+	<bean id="inforeDao" class="dv.sys.dao.impl.internalDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="inforeService" class="dv.biz.impl.internalBizImpl">
+		<property name="internaldao" ref="inforeDao" />
+	</bean>
+	<bean id="internal_getAll" class="dv.sys.action.internalAction" scope="prototype">
+		<property name="internalbiz" ref="inforeService" />
+	</bean>
+	<bean id="internal_csv" class="dv.sys.action.internalAction" scope="prototype">
+		<property name="internalbiz" ref="inforeService" />
+	</bean>
+	
+	<!--管理员外部门店注入  -->
+	<bean id="outforeDao" class="dv.sys.dao.impl.ExternalDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="outforeService" class="dv.biz.impl.ExternalBizImpl">
+		<property name="externadao" ref="outforeDao" />
+	</bean>
+	<bean id="external_getAll" class="dv.sys.action.ExternalAction" scope="prototype">
+		<property name="externalbiz" ref="outforeService" />
+	</bean>
+	<bean id="external_csv" class="dv.sys.action.ExternalAction" scope="prototype">
+		<property name="externalbiz" ref="outforeService" />
+	</bean>
+	<!--管理员直营门店注入  -->
+	<bean id="ctlyforeDao" class="dv.sys.dao.impl.TtotdzrptDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="ctlyforeService" class="dv.biz.impl.TtotdzrptBizImpl">
+		<property name="totdzrptDao" ref="ctlyforeDao" />
+	</bean>
+	<bean id="ctly_getAll" class="dv.sys.action.TtotdzrptAction" scope="prototype">
+		<property name="totdzrptBiz" ref="ctlyforeService" />
+	</bean>
+		<bean id="ctly_csv" class="dv.sys.action.TtotdzrptAction" scope="prototype">
+		<property name="totdzrptBiz" ref="ctlyforeService" />
+	</bean>
+	
+	<!--员工内部门店注入  -->
+	<bean id="inforeYgDao" class="dv.sys.dao.impl.InternalYgDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="inforeYgService" class="dv.biz.impl.InternalYgBizImpl">
+		<property name="internalygdao" ref="inforeYgDao" />
+	</bean>
+	<bean id="internalYg_getAll" class="dv.sys.action.InternalYgAction" scope="prototype">
+		<property name="internalygbiz" ref="inforeYgService" />
+	</bean>
+	<bean id="internalYg_csv" class="dv.sys.action.InternalYgAction" scope="prototype">
+		<property name="internalygbiz" ref="inforeYgService" />
+	</bean>
+	<!--员工外部门店注入  -->
+	<bean id="externalYgDao" class="dv.sys.dao.impl.ExternalYgDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="externalYgService" class="dv.biz.impl.ExternalYgBizImpl">
+		<property name="externalygdao" ref="externalYgDao" />
+	</bean>
+	<bean id="externalYg_getAll" class="dv.sys.action.ExternalYgAction" scope="prototype">
+		<property name="externalygbiz" ref="externalYgService" />
+	</bean>
+	<bean id="externalYg_csv" class="dv.sys.action.ExternalYgAction" scope="prototype">
+		<property name="externalygbiz" ref="externalYgService" />
+	</bean>
+	<!--员工Ttotdzrpt门店注入  -->
+	<bean id="ttotdzrptYgDao" class="dv.sys.dao.impl.TtotdzrptYgDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="ttotdzrptYgService" class="dv.biz.impl.TtotdzrptYgBizImpl">
+		<property name="ttotdzrptygdao" ref="ttotdzrptYgDao" />
+	</bean>
+	<bean id="ttotdzrptYg_getAll" class="dv.sys.action.TtotdzrptYgAction" scope="prototype">
+		<property name="ttotdzrptygbiz" ref="ttotdzrptYgService" />
+	</bean>
+	<bean id="ttotdzrptYg_csv" class="dv.sys.action.TtotdzrptYgAction" scope="prototype">
+		<property name="ttotdzrptygbiz" ref="ttotdzrptYgService" />
+	</bean>
+</beans>

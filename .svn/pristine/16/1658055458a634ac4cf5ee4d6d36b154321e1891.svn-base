@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="dv.sys.entity.WebRole" table="WEB_ROLE">
+        <comment>角色表</comment>
+        <id name="roleid" type="java.lang.String">
+            <column name="ROLEID" length="20" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="java.lang.String">
+            <column name="NAME" length="40">
+                <comment>角色名称</comment>
+            </column>
+        </property>
+        <property name="orderno" type="java.lang.String">
+            <column name="ORDERNO" length="2">
+                <comment>角色排序</comment>
+            </column>
+        </property>
+        <property name="rtype" type="java.lang.String">
+            <column name="RTYPE" length="2">
+                <comment>角色类型：0后台，1前台</comment>
+            </column>
+        </property>
+        <!-- 角色资源 -->
+        <set name="webResources" table="web_role_resource" cascade="save-update">
+        	<key><column name="roleid"></column></key>
+        	<many-to-many class="dv.sys.entity.WebResource" column="resid"/>
+        </set>
+        <!-- 角色用户 -->
+        <set name="webUsers" table="web_user_role" inverse="true">
+            <key>
+                <column name="ROLEID" length="20" not-null="true"/>
+            </key>
+            <many-to-many class="dv.sys.entity.WebUser" column="USERID"/>
+        </set>
+    </class>
+</hibernate-mapping>

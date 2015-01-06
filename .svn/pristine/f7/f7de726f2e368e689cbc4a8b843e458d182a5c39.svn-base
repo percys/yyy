@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="dv.sys.entity.WebResource" table="WEB_RESOURCE">
+        <comment>资源表</comment>
+        <id name="resid" type="java.lang.String">
+            <column name="RESID" length="20" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="webResource" class="dv.sys.entity.WebResource" fetch="select" not-found="ignore">
+            <column name="FATHERID" length="20">
+                <comment>上级资源编号</comment>
+            </column>
+        </many-to-one>
+        <property name="name" type="java.lang.String">
+            <column name="NAME" length="40">
+                <comment>资源名称</comment>
+            </column>
+        </property>
+        <property name="url" type="java.lang.String">
+            <column name="URL">
+                <comment>资源路径</comment>
+            </column>
+        </property>
+        <property name="orderno" type="java.lang.String">
+            <column name="ORDERNO" length="2">
+                <comment>资源排序序号</comment>
+            </column>
+        </property>
+        <property name="ico" type="java.lang.String">
+            <column name="ICO" length="20">
+                <comment>资源展示图标</comment>
+            </column>
+        </property>
+        <property name="ispage" type="java.lang.String">
+            <column name="ISPAGE" length="1">
+                <comment>是否是页面,T=是,F=否</comment>
+            </column>
+        </property>
+        <set name="webRoles" inverse="true" table="web_role_resource">
+			<key><column name="resid"/></key>
+			<many-to-many class="dv.sys.entity.WebRole" column="roleid"/>
+        </set>
+        <set name="webResources" inverse="true">
+            <key>
+                <column name="FATHERID" length="20">
+                    <comment>上级资源编号</comment>
+                </column>
+            </key>
+            <one-to-many class="dv.sys.entity.WebResource" />
+        </set>
+    </class>
+</hibernate-mapping>

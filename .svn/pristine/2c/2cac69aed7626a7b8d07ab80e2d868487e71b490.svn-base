@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()+ path + "/";
+%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>紫燕集团</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<jsp:include page="resource/commons/jslib.jsp" />
+<style>
+* {
+	padding: 0px;
+	margin: 0px;
+}
+</style>
+<script type="text/javascript">
+function GetOrderCount(){
+	$.post("eamil_count.action",function(r){
+			if (r&&r.success) {
+				$.messager.show({
+					title:'提示',
+					msg:r.msg,
+					timeout:5000
+				});
+			}
+		},"json");
+};
+   $(document).ready(function(){
+      GetOrderCount();
+      window.setInterval("GetOrderCount()",60000);//1分钟刷新1次
+      });
+
+$(document).ready(function(e) {
+	var centerTab;
+	centerTab=$("#centerTab");
+	$("#westMenuTree").tree({
+		url:'resource_list.action',
+		lines:true,
+		onClick: function(node){
+			addTab(node);
+		},
+		onLoadSuccess:function(node,data){
+			var temp=$(this);
+			if (data) {
+				$(data).each(function(index,d){
+					if (this.state=='closed') {
+						temp.tree('expandAll');
+					}
+				});
+			}
+		}
+	});
+
+	/*添加选项卡*/
+	function addTab(node){
+		if($("#westMenuTree").tree("getParent",node.target)==null){return;}
+		if(centerTab.tabs("exists",node.text)){
+			centerTab.tabs("select",node.text);
+			centerTab.tabs("getSelected").panel("refresh");
+		}else{
+			centerTab.tabs("add",{
+				title:node.text,
+				selected:true,
+				closable:true,
+				href:$(node).tree("getParent",node.target).attributes.url+node.attributes.url,
+				iconCls:node.iconCls
+			});
+		}
+	}
+});
+$(function () {
+//绑定tabs的右键菜单
+	$("#centerTab").tabs({
+		onContextMenu : function (e, title) {
+			e.preventDefault();
+			$('#tabsMenu').menu('show', {
+				left : e.pageX,
+				top : e.pageY
+			}).data("tabTitle", title);
+		}
+	});
+	
+	//实例化menu的onClick事件
+	$("#tabsMenu").menu({
+		onClick : function (item) {
+			CloseTab(this, item.name);
+		}
+	});
+	
+	//几个关闭事件的实现
+	function CloseTab(menu, type) {
+		var curTabTitle = $(menu).data("tabTitle");
+		var tabs = $("#centerTab");
+		
+		if (type === "close") {
+			tabs.tabs("close", curTabTitle);
+			return;
+		}
+		
+		var allTabs = tabs.tabs("tabs");
+		var closeTabsTitle = [];
+		
+		$.each(allTabs, function () {
+			var opt = $(this).panel("options");
+			if (opt.closable && opt.title != curTabTitle && type === "Other") {
+				closeTabsTitle.push(opt.title);
+			} else if (opt.closable && type === "All") {
+				closeTabsTitle.push(opt.title);
+			}
+		});
+		
+		for (var i = 0; i < closeTabsTitle.length; i++) {
+			tabs.tabs("close", closeTabsTitle[i]);
+		}
+	}
+});
+</script>
+</head>
+
+<body class="easyui-layout">
+
+<div data-options="region:'north'"  style="height:80px;" border="false" href="resource/commons/north.jsp"></div>
+<div data-options="region:'west',title:'导航菜单',split:true" style="width:200px;">
+
+    <div class="easyui-accordion" fit="true" border="none">
+        <div title="功能目录" style="overflow:auto;padding:0px;">
+          <ul id="westMenuTree"></ul>
+          
+        </div>
+   
+    </div>  
+</div>
+<div data-options="region:'center',split:true">
+	<div id="centerTab" class="easyui-tabs" fit="true" border="false">   
+        <div title="关于项目" iconCls="icon-heart" style="padding:20px;font-size:14px; background-image: url('images/info.jpg'); background-repeat: no-repeat;">
+
+        
+			
+        </div>
+	</div>
+</div>
+<div data-options="region:'south',split:true" style="height:50px;"></div>
+  <div id="tabsMenu" class="easyui-menu" style="width:50px;">  
+    <div name="close">关闭</div>  
+    <div name="Other">关闭其他</div>  
+    <div name="All">关闭所有</div>
+  </div> 
+</body>
+</html>

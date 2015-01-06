@@ -1,0 +1,85 @@
+package dv.biz;
+
+import java.util.List;
+
+import dv.sys.entity.Mailbox;
+import dv.sys.entity.MailboxDetails;
+import dv.sys.entity.TtotdzrptShwbjs;
+import dv.sys.entity.WebUser;
+import dv.sys.queryProperties.QueryInternalNbjs;
+import dv.sys.queryProperties.QueryMailbox;
+
+public interface MailBoxBiz {
+	/**
+	 * 查询
+	 * @param user
+	 * @return
+	 */
+	public Long getCommodityTotal(WebUser user);
+	/**
+	 * 查询total
+	 * @param user
+	 * @return
+	 */
+	public Long getCommodityTotals(WebUser user);
+	/**
+	 * 查询未读信息
+	 * @param user
+	 * @return
+	 */
+	public Long getCount(WebUser user);
+	/**
+	 * 查询所有管理员外部门店数据
+	 * 
+	 * @param page当前页
+	 * @param rows每页显示大小
+	 * @param Object筛选
+	 * @return 列表
+	 */
+	public List<Mailbox> doSplitPage(final int page, final int rows,final WebUser user);
+	/**
+	 * 查询所有账户下的通知数据
+	 * 
+	 * @param page当前页
+	 * @param rows每页显示大小
+	 * @param Object筛选
+	 * @return 列表
+	 */
+	public List<Mailbox> doSplitPages(final int page, final int rows,final WebUser user);
+	/**
+	 * 查询未读通知
+	 * @param user 登录用户
+	 * @return
+	 */
+	public List<MailboxDetails> getUnReadInfo(WebUser user);
+	/**
+	  * 查询未读列表被点击的通知内容
+	 * @param user 登录用户
+	 */
+	public List<MailboxDetails> getMailInfo(WebUser user,MailboxDetails md);
+	/**
+	 * 点击通知后，更改被点击通知的状态，为已读
+	 * @param user
+	 * @param md
+	 */
+	public void updateMail(Mailbox mb);
+	/**
+	 * 用户回复通知
+	 * @param user
+	 * @return
+	 */
+	public int addsend(Mailbox maibox);
+
+	/**
+	 * 根据id查询
+	 * @param id
+	 * @return
+	 */
+	public Mailbox getMailbox(Integer id);
+	/**
+	 * 发送通知详情
+	 * @param detail
+	 * @return
+	 */
+	public MailboxDetails saveMbDetail(MailboxDetails detail);
+}

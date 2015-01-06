@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="dv.sys.entity.WebDictionary" table="WEB_DICTIONARY">
+        <comment>数据字典表</comment>
+        <composite-id name="id" class="dv.sys.entity.WebDictionaryId">
+            <key-property name="typename" type="java.lang.String">
+                <column name="TYPENAME" length="40" />
+            </key-property>
+            <key-property name="itemcode" type="java.lang.String">
+                <column name="ITEMCODE" length="50" />
+            </key-property>
+        </composite-id>
+         <property name="itemdesc" type="java.lang.String">
+             <column name="ITEMDESC" length="200" />
+         </property>
+         <property name="orderno" type="java.lang.String">
+             <column name="ORDERNO" length="2" />
+         </property>
+         <property name="isvisible" type="java.lang.String">
+             <column name="ISVISIBLE" length="1" />
+         </property>
+         <property name="memo" type="java.lang.String">
+             <column name="MEMO" length="100" />
+         </property>
+    </class>
+</hibernate-mapping>

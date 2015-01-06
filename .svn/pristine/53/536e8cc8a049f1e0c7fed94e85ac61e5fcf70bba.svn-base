@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="dv.sys.entity.WebUser" table="WEB_USER">
+        <comment>用户表</comment>
+        <id name="userid" type="java.lang.String">
+            <column name="USERID" length="20" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="webUnit" class="dv.sys.entity.WebUnit" fetch="select">
+            <column name="UNITID" length="20">
+                <comment>部门编号</comment>
+            </column>
+        </many-to-one>
+        <property name="username" type="java.lang.String">
+            <column name="USERNAME" length="20">
+                <comment>用户显示名称</comment>
+            </column>
+        </property>
+        <property name="password" type="java.lang.String">
+            <column name="PASSWORD" length="20">
+                <comment>用户密码</comment>
+            </column>
+        </property> 
+        <property name="phoneno" type="java.lang.String">
+            <column name="PHONENO" length="20">
+                <comment>电话号码</comment>
+            </column>
+        </property>
+        <property name="bz" type="java.lang.String">
+            <column name="BZ" length="500">
+                <comment>用户说明</comment>
+            </column>
+        </property>
+        <property name="userType" type="java.lang.String">
+            <column name="USER_TYPE" length="20">
+                <comment>用户类型</comment>
+            </column>
+        </property>
+        <property name="isuse" type="java.lang.String">
+            <column name="ISUSE" length="2" not-null="true">
+                <comment>使用标识，T=在用，F= 不在用</comment>
+            </column>
+        </property>
+        <property name="email" type="java.lang.String">
+            <column name="EMAIL" length="30">
+                <comment>电子邮件</comment>
+            </column>
+        </property>
+        <property name="agentId" type="java.lang.String">
+            <column name="AGENT_ID" length="50" not-null="true" >
+            	<comment>员工工号</comment>
+            </column>
+        </property>
+          <property name="orgcode" type="java.lang.String">
+            <column name="ORGCODE" length="50">
+            	<comment>门店编码</comment>
+            </column>
+        </property>
+        <property name="orgname" type="java.lang.String">
+            <column name="ORGNAME" length="50">
+            	<comment>门店名称</comment>
+            </column>
+        </property>
+        <set name="webRoles" table="web_user_role" cascade="save-update">
+            <key>
+                <column name="USERID" length="20" not-null="true"/>
+            </key>
+            <many-to-many class="dv.sys.entity.WebRole" column="roleid"/>
+        </set>
+    </class>
+    <!-- 查找用户的角色 -->
+    <query name="userRoles">
+    	<![CDATA[
+			from WebUser u inner join fetch u.webRoles where u.userid=?
+    	]]>
+    </query>
+    <!-- 查找用户可用资源 -->
+    <query name="userResources">
+    	<![CDATA[
+			from WebUser u inner join fetch u.webRoles as r 
+			inner join fetch r.webResources  where u.userid=?
+    	]]>
+    </query>  
+</hibernate-mapping>

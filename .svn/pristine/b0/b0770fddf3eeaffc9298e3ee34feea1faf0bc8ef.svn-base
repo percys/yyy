@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<!-- 设置Web应用默认的字符集 -->
+	<constant name="struts.i18n.encoding" value="utf-8"/>
+	<package name="sys" namespace="/" extends="struts-default">
+		<global-results>
+			<result name="login">login.jsp</result>
+		</global-results>
+		<!-- Random验证码 -->
+		<action name="*_*" class="{1}_{2}" method="{2}">
+			<result>/resource/sys/web_{1}.jsp</result>
+			<result name="loginSuccess">index.jsp</result>
+			<result name="info">resource/commons/loginInfo.jsp</result>
+			<result name="check" type="stream">
+				<param name="contentType">image/jpeg</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+</struts>

@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+          "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+<session-factory>
+	<property name="dialect">
+		org.hibernate.dialect.Oracle9Dialect
+	</property>
+	<property name="connection.url">
+		jdbc:oracle:thin:@192.168.2.250:1521:zydz
+	</property>
+	<property name="connection.username">pxd</property>
+	<property name="connection.password">pxd</property>
+	<property name="connection.driver_class">
+		oracle.jdbc.OracleDriver
+	</property>
+	<property name="show_sql">true</property>
+	<mapping resource="dv/sys/entity/Torgmanage.hbm.xml" />
+	<mapping resource="dv/sys/entity/Ttotdzrpt.hbm.xml" />
+	<mapping resource="dv/sys/entity/TtotdzrptShnbjs.hbm.xml" />
+	<mapping resource="dv/sys/entity/TtotdzrptShwbjs.hbm.xml" />
+	<mapping resource="dv/sys/entity/Tusruser.hbm.xml" />
+	<mapping resource="dv/sys/entity/WebDictionary.hbm.xml" />
+	<mapping resource="dv/sys/entity/WebResource.hbm.xml" />
+	<mapping resource="dv/sys/entity/WebRole.hbm.xml" />
+	<mapping resource="dv/sys/entity/WebUnit.hbm.xml" />
+	<mapping resource="dv/sys/entity/WebUser.hbm.xml" />
+	<mapping resource="dv/sys/entity/MailboxDetails.hbm.xml" />
+	<mapping resource="dv/sys/entity/Mailbox.hbm.xml" />
+	<mapping resource="dv/sys/entity/TtotdzrptNb.hbm.xml" />
+</session-factory>
+</hibernate-configuration>
